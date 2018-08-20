@@ -1,0 +1,10 @@
+---
+- hosts: admin
+  become: true
+  roles:
+    - role: preflight_admin
+
+- hosts: nodes client
+  become: true
+  roles:
+    - role: preflight_nodes

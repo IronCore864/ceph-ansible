@@ -1,0 +1,1 @@
+admin_working_dir: "/home/{{ ansible_user }}/my-cluster"

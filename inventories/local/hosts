@@ -1,0 +1,9 @@
+[admin]
+10.2.2.2 ansible_ssh_private_key_file=.vagrant/machines/admin/virtualbox/private_key
+
+[nodes]
+10.2.2.3 ansible_ssh_private_key_file=.vagrant/machines/node1/virtualbox/private_key
+10.2.2.4 ansible_ssh_private_key_file=.vagrant/machines/node2/virtualbox/private_key
+
+[client]
+10.2.2.5 ansible_ssh_private_key_file=.vagrant/machines/client/virtualbox/private_key

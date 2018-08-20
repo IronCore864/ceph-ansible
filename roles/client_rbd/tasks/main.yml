@@ -1,0 +1,11 @@
+- name: install Ceph on your ceph-client node
+  command: chdir={{ admin_working_dir }} ceph-deploy install client
+
+- name: copy the Ceph configuration file and the ceph.client.admin.keyring to the ceph-client
+  command: chdir={{ admin_working_dir }} ceph-deploy admin client
+
+- name: create a pool (we recommend the name ‘rbd’)
+  command: chdir={{ admin_working_dir }} ssh node1 sudo ceph osd pool create rbd 8
+
+- name: init the pool
+  command: chdir={{ admin_working_dir }} ssh node1 sudo rbd pool init rbd

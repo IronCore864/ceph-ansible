@@ -1,0 +1,25 @@
+- name: create rbd
+  command: rbd create foo --size 4096 --image-feature layering
+
+- name: rbd map
+  command: rbd map foo --name client.admin
+
+- name: mkfs
+  command: mkfs.ext4 -m0 /dev/rbd/rbd/foo
+
+- name: mkdir
+  file:
+    path: /mnt/ceph-block-device
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+
+- name: mount
+  command: mount /dev/rbd/rbd/foo /mnt/ceph-block-device
+
+- name: change owner to current user
+  file:
+    path: /mnt/ceph-block-device
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"

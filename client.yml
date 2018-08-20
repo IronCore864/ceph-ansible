@@ -1,0 +1,9 @@
+---
+- hosts: admin
+  roles:
+    - role: client_rbd
+
+- hosts: client
+  become: true
+  roles:
+    - role: ceph_client

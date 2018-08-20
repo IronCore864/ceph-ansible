@@ -1,0 +1,27 @@
+---
+- name: Create .ssh folder
+  file:
+    path: "{{ home_dir }}/.ssh"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: 0700
+
+- name: Upload SSH key
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: 0600
+  with_items:
+    - { src: id_rsa, dest: "{{ home_dir }}/.ssh/id_rsa" }
+    - { src: id_rsa.pub, dest: "{{ home_dir }}/.ssh/id_rsa.pub" }
+
+- name: turn off StrictHostKeyChecking
+  blockinfile:
+    path: "{{ home_dir }}/.ssh/config"
+    create: yes
+    block: |
+      Host *
+        StrictHostKeyChecking no

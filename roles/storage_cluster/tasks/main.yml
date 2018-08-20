@@ -1,0 +1,50 @@
+- name: create a cluster working directory if it doesn't exist
+  file:
+    path: "{{ admin_working_dir }}"
+    state: directory
+    mode: 0775
+
+- name: Create the cluster (initial-monitor-node)
+  command: chdir={{ admin_working_dir }} ceph-deploy new node1 node2
+
+- name: Install Ceph packages
+  command: chdir={{ admin_working_dir }} ceph-deploy install node1 node2
+
+- name: Deploy the initial monitor(s) and gather the keys
+  command: chdir={{ admin_working_dir }} ceph-deploy mon create-initial
+
+# check keyring files are created
+# ceph.client.admin.keyring
+# ceph.bootstrap-mgr.keyring
+# ceph.bootstrap-osd.keyring
+# ceph.bootstrap-mds.keyring
+# ceph.bootstrap-rgw.keyring
+# ceph.bootstrap-rbd.keyring
+
+- name:  copy the configuration file and admin key to your admin node and your Ceph Nodes
+  command: chdir={{ admin_working_dir }} ceph-deploy admin node1 node2
+
+- name: Deploy a manager daemon
+  command: chdir={{ admin_working_dir }} ceph-deploy mgr create node1
+
+- name: Add OSDs for node 1
+  command: chdir={{ admin_working_dir }} ceph-deploy osd create --data /dev/sdc node1
+
+- name: Add OSDs for node 2
+  command: chdir={{ admin_working_dir }} ceph-deploy osd create --data /dev/sdc node2
+
+# ssh node1 sudo ceph health
+# stdout HEALTH_OK
+
+- name: create a metadata server
+  command: chdir={{ admin_working_dir }} ceph-deploy mds create node1
+
+- name: Add another Ceph Monitors to your cluster for HA
+  command: chdir={{ admin_working_dir }} ceph-deploy mon add node2
+
+# ssh node1 sudo ceph quorum_status
+
+- name: deploy additional manager daemons
+  command: chdir={{ admin_working_dir }} ceph-deploy mgr create node2
+
+# ssh node1 sudo ceph -s

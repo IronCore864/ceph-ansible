@@ -1,0 +1,14 @@
+---
+- name: Create .ssh folder
+  file:
+    path: "{{ home_dir }}/.ssh"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: 0700
+
+- name: Set authorized key took from file
+  authorized_key:
+    user: "{{ user }}"
+    state: present
+    key: "{{ lookup('file', 'roles/preflight_admin/files/id_rsa.pub') }}"

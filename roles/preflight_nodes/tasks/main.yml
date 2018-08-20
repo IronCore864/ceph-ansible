@@ -1,0 +1,14 @@
+- name: Install a list of packages
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+  with_items:
+    - ntp
+    - python
+
+- name: update sudoers
+  lineinfile:
+    path: /etc/sudoers
+    line: Defaults:ceph !requiretty
+
+- import_tasks: ssh_key.yml
