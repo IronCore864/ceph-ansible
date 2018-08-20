@@ -2,6 +2,8 @@
 
 Installs a Ceph cluster with ansible, including admin and client nodes.
 
+For development/local test usage only; for production, needs to be fine-tuned.
+
 # Dependencies
 
 - Ansible
